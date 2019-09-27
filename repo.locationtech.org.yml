@@ -72,6 +72,8 @@ spec:
               -Dsun.zip.disableMemoryMapping=true
               -Djava.io.tmpdir=/tmp/nexus
               -Dorg.sonatype.nexus.proxy.maven.routing.Config.prefixFileMaxSize=500000
+      securityContext: 
+        supplementalGroups: [5050] 
       volumes:
       - name: nexus-work  
         persistentVolumeClaim:
