@@ -131,7 +131,7 @@ metadata:
     haproxy.router.openshift.io/timeout: 60s
   name: nexus
 spec:
-  host: repo.locationtech.org
+  host: repo-old.locationtech.org
   path: /
   port:
     targetPort: http
