@@ -6,9 +6,9 @@
 # or the MIT License which is available at https://opensource.org/licenses/MIT.
 # SPDX-License-Identifier: EPL-2.0 OR MIT
 #*******************************************************************************
-FROM eclipsecbijenkins/openshift-java:jdk8u212-b04_openj9-0.14.2
+FROM eclipsecbi/adoptopenjdk-coreutils:openjdk8-openj9-alpine-slim
 
-ARG NEXUS_VERSION=2.14.14-01
+ARG NEXUS_VERSION=2.14.15-01
 ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VERSION}-bundle.tar.gz
 
 ENV NEXUS_WORK=/var/nexus/work
