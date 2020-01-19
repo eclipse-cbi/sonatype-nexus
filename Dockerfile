@@ -24,7 +24,7 @@ RUN chgrp 0 /usr/local/bin/nexus.sh && chmod g+x /usr/local/bin/nexus.sh && \
   mkdir -p "${NEXUS_HOME}" && \
   curl --fail --silent --location --retry 3 "${NEXUS_DOWNLOAD_URL}" | tar xz --strip-components=1 -C "${NEXUS_HOME}" && \
   chgrp -R 0 "${NEXUS_HOME}" && chmod -R g+w "${NEXUS_HOME}" && \
-  rm -rf "/tmp/nexus-${NEXUS_VERSION}"
+  echo "org.sonatype.nexus.proxy.maven.routing.Config.prefixFileMaxSize=500000" >> "${NEXUS_HOME}/conf/nexus.properties"
 
 ENV CONTEXT_PATH /
 
