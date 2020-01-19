@@ -17,6 +17,7 @@ if [[ $# -lt 1 ]]; then
   -Dnexus-work="${NEXUS_WORK}" \
   -Dnexus-webapp-context-path="${CONTEXT_PATH}" \
   -Djava.util.prefs.userRoot="${NEXUS_WORK}/java_prefs" \
+  -Dorg.sonatype.nexus.proxy.maven.routing.Config.prefixFileMaxSize=500000 \
   ${JAVA_OPTS:-} \
   -cp "conf/:lib/*" \
   org.sonatype.nexus.bootstrap.Launcher "conf/jetty.xml" "conf/jetty-requestlog.xml" "${@:1}"
