@@ -9,6 +9,10 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  annotations:
+    openshift.io/sa.scc.mcs: s0:c20,c15
+    openshift.io/sa.scc.supplemental-groups: 9112/1 # nexus
+    openshift.io/sa.scc.uid-range: 11895/1 # service.nexus
   name: repo-eclipse-org
 ---
 apiVersion: apps/v1
@@ -31,7 +35,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
       - name: nexus
-        image: eclipsecbi/nexus:2.14.15-01
+        image: eclipsecbi/nexus:2.14.16-01
         imagePullPolicy: Always
         livenessProbe:
           exec:
@@ -72,8 +76,6 @@ spec:
               -Dsun.zip.disableMemoryMapping=true
               -Djava.io.tmpdir=/tmp/nexus
               -Dorg.sonatype.nexus.proxy.maven.routing.Config.prefixFileMaxSize=500000
-      securityContext: 
-        supplementalGroups: [100] 
       volumes:
       - name: nexus-work  
         persistentVolumeClaim:
