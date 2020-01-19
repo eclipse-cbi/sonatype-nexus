@@ -37,6 +37,8 @@ spec:
       - name: nexus
         image: eclipsecbi/nexus:2.14.16-01
         imagePullPolicy: Always
+        securityContext: 
+          supplementalGroups: [9112]
         livenessProbe:
           exec:
             command:
@@ -44,8 +46,8 @@ spec:
               - -c 
               - "test \"$(curl -s -H 'Accept: application/json' http://localhost:8081/service/local/status | jq -r '.data.state')\" == 'STARTED'"
           periodSeconds: 30
-          timeoutSeconds: 30
-          initialDelaySeconds: 300
+          timeoutSeconds: 60
+          initialDelaySeconds: 480
         readinessProbe:
           httpGet:
             path: /service/local/status
@@ -58,10 +60,10 @@ spec:
           protocol: TCP
         resources:
           requests:
-            cpu: 1
-          limits:
             cpu: 2
-            memory: 2Gi
+          limits:
+            cpu: 4
+            memory: 8Gi
         volumeMounts:
         - mountPath: /var/nexus/work
           name: nexus-work
