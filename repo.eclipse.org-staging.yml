@@ -1,0 +1,116 @@
+#*******************************************************************************
+# Copyright (c) 2019 Eclipse Foundation and others.
+# This program and the accompanying materials are made available
+# under the terms of the Eclipse Public License 2.0
+# which is available at http://www.eclipse.org/legal/epl-v20.html,
+# or the MIT License which is available at https://opensource.org/licenses/MIT.
+# SPDX-License-Identifier: EPL-2.0 OR MIT
+#*******************************************************************************
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: repo-eclipse-org-staging
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: repo-eclipse-org-staging
+  name: nexus-staging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus-staging
+  serviceName: nexus-staging
+  template:
+    metadata:
+      labels:
+        app: nexus-staging
+      name: nexus-staging
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: nexus-staging
+        image: eclipsecbi/nexus:2.14.17-01
+        imagePullPolicy: Always
+        securityContext: 
+          supplementalGroups: [9112]
+        livenessProbe:
+          exec:
+            command:
+              - /bin/bash 
+              - -c 
+              - "test \"$(curl -s -H 'Accept: application/json' http://localhost:8081/nexus-staging/service/local/status | jq -r '.data.state')\" == 'STARTED'"
+          periodSeconds: 30
+          timeoutSeconds: 60
+          initialDelaySeconds: 480
+        readinessProbe:
+          httpGet:
+            path: /nexus-staging/service/local/status
+            port: 8081
+          periodSeconds: 10
+          timeoutSeconds: 30
+          initialDelaySeconds: 5
+        ports:
+        - containerPort: 8081
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 2
+          limits:
+            cpu: 4
+            memory: 8Gi
+        volumeMounts:
+        - mountPath: /var/nexus/work
+          name: nexus-work
+        - mountPath: /tmp/nexus
+          name: nexus-tmp
+        env:
+          - name: JAVA_OPTS
+              # -XX:+UseContainerSupport -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle are set in parent image via JAVA_TOOL_OPTIONS
+              # sun.zip.disableMemoryMapping=true is necessary until it starts running on jdk9 and latter (see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=7129299)
+            value: >-
+              -XshowSettings:vm
+              -Dsun.zip.disableMemoryMapping=true
+              -Djava.io.tmpdir=/tmp/nexus
+              -Dorg.sonatype.nexus.proxy.maven.routing.Config.prefixFileMaxSize=500000
+              -Dnexus-webapp-context-path=/nexus-staging
+      volumes:
+      - name: nexus-work  
+        emptyDir: {}
+      - name: nexus-tmp
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: repo-eclipse-org-staging
+  name: nexus-staging
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    app: nexus-staging
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  namespace: repo-eclipse-org-staging
+  annotations:
+    haproxy.router.openshift.io/timeout: 60s
+  name: nexus-staging
+spec:
+  host: repo.eclipse.org
+  path: /nexus-staging
+  port:
+    targetPort: http
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: "Service"
+    name: "nexus-staging"
+    weight: 100
