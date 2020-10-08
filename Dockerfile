@@ -8,7 +8,7 @@
 #*******************************************************************************
 FROM eclipsecbi/adoptopenjdk-coreutils:openjdk8-openj9-alpine-slim
 
-ARG NEXUS_VERSION=2.14.17-01
+ARG NEXUS_VERSION=2.14.19-01
 ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VERSION}-bundle.tar.gz
 
 ENV NEXUS_WORK=/var/nexus/work
