@@ -9,10 +9,6 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  annotations:
-    openshift.io/sa.scc.mcs: s0:c20,c15
-    openshift.io/sa.scc.supplemental-groups: 9112/1 # nexus
-    openshift.io/sa.scc.uid-range: 11895/1 # service.nexus
   name: repo-eclipse-org
 ---
 apiVersion: apps/v1
@@ -37,14 +33,12 @@ spec:
       - name: nexus
         image: eclipsecbi/nexus:2.14.20-02
         imagePullPolicy: Always
-        securityContext: 
-          supplementalGroups: [9112]
         livenessProbe:
           exec:
             command:
               - /bin/bash 
               - -c 
-              - "test \"$(curl -s -H 'Accept: application/json' http://localhost:8081/service/local/status | jq -r '.data.state')\" == 'STARTED'"
+              - "test \"$(curl -fs -H 'Accept: application/json' http://localhost:8081/service/local/status | jq -r '.data.state')\" == 'STARTED'"
           periodSeconds: 30
           timeoutSeconds: 60
           initialDelaySeconds: 480
@@ -60,9 +54,9 @@ spec:
           protocol: TCP
         resources:
           requests:
-            cpu: 2
+            cpu: "2"
           limits:
-            cpu: 4
+            cpu: "4"
             memory: 8Gi
         volumeMounts:
         - mountPath: /var/nexus/work
@@ -79,39 +73,20 @@ spec:
               -Djava.io.tmpdir=/tmp/nexus
               -Dorg.sonatype.nexus.proxy.maven.routing.Config.prefixFileMaxSize=500000
       volumes:
-      - name: nexus-work  
-        persistentVolumeClaim:
-          claimName: nexus-work
       - name: nexus-tmp
         emptyDir: {}
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: nexus-work
-spec:
-  capacity:
-    storage: 500Gi
-  accessModes:
-    - ReadWriteOnce
-  claimRef:
-    namespace: repo-eclipse-org
-    name: nexus-work
-  nfs:
-    server: mrslate
-    path: /home/data/nexus/nexus-work/
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: nexus-work
-  namespace: repo-eclipse-org
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 500Gi
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: nexus-work
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1000Gi
+      volumeMode: Filesystem
 ---
 apiVersion: v1
 kind: Service

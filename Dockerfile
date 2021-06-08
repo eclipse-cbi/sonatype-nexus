@@ -8,6 +8,7 @@
 #*******************************************************************************
 FROM eclipsecbi/adoptopenjdk-coreutils:openjdk8-openj9-alpine-slim
 
+# See https://help.sonatype.com/repomanager2/download/download-archives---repository-manager-oss
 ARG NEXUS_VERSION=2.14.20-02
 ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VERSION}-bundle.tar.gz
 

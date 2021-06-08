@@ -33,8 +33,6 @@ spec:
       - name: nexus-staging
         image: eclipsecbi/nexus:2.14.20-02
         imagePullPolicy: Always
-        securityContext: 
-          supplementalGroups: [9112]
         livenessProbe:
           exec:
             command:
@@ -56,10 +54,10 @@ spec:
           protocol: TCP
         resources:
           requests:
-            cpu: 2
+            cpu: "200m"
           limits:
-            cpu: 4
-            memory: 8Gi
+            cpu: "500m"
+            memory: 1Gi
         volumeMounts:
         - mountPath: /var/nexus/work
           name: nexus-work
