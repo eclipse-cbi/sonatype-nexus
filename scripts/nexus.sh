@@ -19,7 +19,7 @@ if [[ $# -lt 1 ]]; then
   -Djava.util.prefs.userRoot="${NEXUS_WORK}/java_prefs" \
   ${JAVA_OPTS:-} \
   -cp "conf/:lib/*" \
-  org.sonatype.nexus.bootstrap.Launcher "conf/jetty.xml" "conf/jetty-requestlog.xml" "${@:1}"
+  org.sonatype.nexus.bootstrap.Launcher "conf/jetty.xml" "conf/jetty-requestlog.xml" "conf/jetty-http.xml" "${@:1}"
 fi
 
 # otherwise, assume user want to run his own process, for example a `bash` shell to explore this image
