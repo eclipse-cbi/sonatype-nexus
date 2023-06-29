@@ -31,13 +31,13 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
       - name: nexus
-        image: eclipsecbi/nexus:2.14.20-02
+        image: eclipsecbi/nexus:2.15.1-02
         imagePullPolicy: Always
         livenessProbe:
           exec:
             command:
-              - /bin/bash 
-              - -c 
+              - /bin/bash
+              - -c
               - "test \"$(curl -fs -H 'Accept: application/json' http://localhost:8081/service/local/status | jq -r '.data.state')\" == 'STARTED'"
           periodSeconds: 30
           timeoutSeconds: 60
