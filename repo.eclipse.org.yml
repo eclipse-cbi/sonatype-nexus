@@ -41,14 +41,20 @@ spec:
               - "test \"$(curl -fs -H 'Accept: application/json' http://localhost:8081/service/local/status | jq -r '.data.state')\" == 'STARTED'"
           periodSeconds: 30
           timeoutSeconds: 60
-          initialDelaySeconds: 480
         readinessProbe:
+          exec:
+            command:
+              - /bin/bash
+              - -c
+              - "test \"$(curl -fs -H 'Accept: application/json' http://localhost:8081/service/local/status | jq -r '.data.state')\" == 'STARTED'"
+          periodSeconds: 10
+          timeoutSeconds: 30
+        startupProbe:
           httpGet:
             path: /service/local/status
             port: 8081
           periodSeconds: 10
-          timeoutSeconds: 30
-          initialDelaySeconds: 5
+          failureThreshold: 360
         ports:
         - containerPort: 8081
           protocol: TCP
