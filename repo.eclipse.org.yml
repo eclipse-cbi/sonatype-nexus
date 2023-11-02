@@ -114,6 +114,7 @@ metadata:
   namespace: repo-eclipse-org
   annotations:
     haproxy.router.openshift.io/timeout: 60s
+    haproxy.router.openshift.io/disable_cookies: 'true'
   name: nexus
 spec:
   host: repo.eclipse.org
