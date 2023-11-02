@@ -1,0 +1,25 @@
+# Default values for nexus2 staging.
+
+appName: nexus-staging
+namespace: repo-eclipse-org
+host: repo-staging.eclipse.org
+
+image:
+  repository: eclipsecbi/nexus
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+resources:
+  requests:
+    cpu: 1
+  limits:
+    cpu: 2
+    memory: 2Gi
+
+volumeClaimTemplates:
+  spec:
+    storageClassName: rook-ceph-block
+    resources:
+      requests:
+        storage: 50Gi

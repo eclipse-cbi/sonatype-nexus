@@ -1,0 +1,93 @@
+#*******************************************************************************
+# Copyright (c) 2023 Eclipse Foundation and others.
+# This program and the accompanying materials are made available
+# under the terms of the Eclipse Public License 2.0
+# which is available at http://www.eclipse.org/legal/epl-v20.html,
+# or the MIT License which is available at https://opensource.org/licenses/MIT.
+# SPDX-License-Identifier: EPL-2.0 OR MIT
+#*******************************************************************************
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.appName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  serviceName: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+      name: {{ .Values.appName }}
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: {{ .Values.appName }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          exec:
+            command:
+              - /bin/bash
+              - -c
+              - "test \"$(curl -fs -H 'Accept: application/json' http://localhost:8081/service/local/status | jq -r '.data.state')\" == 'STARTED'"
+          periodSeconds: 30
+          timeoutSeconds: 60
+        readinessProbe:
+          exec:
+            command:
+              - /bin/bash
+              - -c
+              - "test \"$(curl -fs -H 'Accept: application/json' http://localhost:8081/service/local/status | jq -r '.data.state')\" == 'STARTED'"
+          periodSeconds: 10
+          timeoutSeconds: 30
+        startupProbe:
+          httpGet:
+            path: /service/local/status
+            port: 8081
+          periodSeconds: 10
+          failureThreshold: 360
+        ports:
+          - name: http
+            containerPort: 8081
+            protocol: TCP
+        resources:
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+        volumeMounts:
+        - mountPath: /var/nexus/work
+          name: nexus-work
+        - mountPath: /tmp/nexus
+          name: nexus-tmp
+        env:
+          - name: JAVA_OPTS
+              # -XX:+UseContainerSupport -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle are set in parent image via JAVA_TOOL_OPTIONS
+              # sun.zip.disableMemoryMapping=true is necessary until it starts running on jdk9 and latter (see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=7129299)
+            value: >-
+              -XshowSettings:vm
+              -Dsun.zip.disableMemoryMapping=true
+              -Djava.io.tmpdir=/tmp/nexus
+              -Dorg.sonatype.nexus.proxy.maven.routing.Config.prefixFileMaxSize=500000
+      volumes:
+      - name: nexus-tmp
+        emptyDir: {}
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: nexus-work
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: {{ .Values.volumeClaimTemplates.spec.storageClassName }}
+      resources:
+        requests:
+          storage: {{ .Values.volumeClaimTemplates.spec.resources.requests.storage }}
+      volumeMode: Filesystem
+

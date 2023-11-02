@@ -1,0 +1,25 @@
+# Default values for nexus2.
+
+appName: nexus
+namespace: repo-eclipse-org
+host: repo.eclipse.org
+
+image:
+  repository: eclipsecbi/nexus
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+resources:
+  requests:
+    cpu: 2
+  limits:
+    cpu: 4
+    memory: 8Gi
+
+volumeClaimTemplates:
+  spec:
+    storageClassName: managed-nfs-storage-bambam
+    resources:
+      requests:
+        storage: 1000Gi
