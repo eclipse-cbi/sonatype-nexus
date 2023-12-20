@@ -17,6 +17,8 @@ resources:
     cpu: 4
     memory: 8Gi
 
+pvcName: nexus-work
+
 volumeClaimTemplates:
   spec:
     storageClassName: managed-nfs-storage-bambam

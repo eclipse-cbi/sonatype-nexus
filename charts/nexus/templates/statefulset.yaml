@@ -62,7 +62,7 @@ spec:
             memory: {{ .Values.resources.limits.memory }}
         volumeMounts:
         - mountPath: /var/nexus/work
-          name: nexus-work
+          name: {{ .Values.pvcName }}
         - mountPath: /tmp/nexus
           name: nexus-tmp
         env:
@@ -81,7 +81,7 @@ spec:
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: nexus-work
+      name: {{ .Values.pvcName }}
     spec:
       accessModes:
       - ReadWriteOnce

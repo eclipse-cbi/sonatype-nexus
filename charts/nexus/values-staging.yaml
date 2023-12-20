@@ -17,9 +17,11 @@ resources:
     cpu: 2
     memory: 2Gi
 
+pvcName: nexus-work-staging-cephfs
+
 volumeClaimTemplates:
   spec:
-    storageClassName: rook-ceph-block
+    storageClassName: cephfs-2repl
     resources:
       requests:
         storage: 50Gi
