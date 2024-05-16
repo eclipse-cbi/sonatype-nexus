@@ -1,0 +1,111 @@
+#*******************************************************************************
+# Copyright (c) 2023 Eclipse Foundation and others.
+# This program and the accompanying materials are made available
+# under the terms of the Eclipse Public License 2.0
+# which is available at http://www.eclipse.org/legal/epl-v20.html,
+# or the MIT License which is available at https://opensource.org/licenses/MIT.
+# SPDX-License-Identifier: EPL-2.0 OR MIT
+#*******************************************************************************
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.appName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  serviceName: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+      name: {{ .Values.appName }}
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: {{ .Values.appName }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          failureThreshold: 6
+          timeoutSeconds: 10
+          httpGet:
+            path: /
+            port: {{ .Values.nexusPort }}
+        readinessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          failureThreshold: 6
+          timeoutSeconds: 10
+          httpGet:
+            path: /
+            port: {{ .Values.nexusPort }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.nexusPort }}
+            protocol: TCP
+        resources:
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+        env:
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.dbSecretName }}
+              key: db_name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.dbSecretName }}
+              key: db_user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.dbSecretName }}
+              key: db_pw
+        - name: LICENSE_FILE
+          value: /etc/nxrm-license/nxrm-license.lic
+        - name: NEXUS_SECURITY_RANDOMPASSWORD
+          value: "true"
+        - name: NEXUS_SEARCH_INDEX_REBUILD_ON_STARTUP
+          value: "true"
+        - name: INSTALL4J_ADD_VM_PARAMS
+          value: "-Xms2703M -Xmx2703M -XX:MaxDirectMemorySize=2703M \
+            -XX:+UnlockExperimentalVMOptions \
+            -XX:+UseCGroupMemoryLimitForHeap \
+            -Dnexus.datastore.enabled=true \
+            -Dnexus.licenseFile=${LICENSE_FILE}
+            -Djava.util.prefs.userRoot=/nexus-data/javaprefs \
+            -Dnexus.datastore.nexus.name=nexus \
+            -Dnexus.datastore.nexus.type=jdbc \
+            -Dnexus.datastore.nexus.jdbcUrl=jdbc:postgresql://postgres-vm1:5432/${DB_NAME} \
+            -Dnexus.datastore.nexus.username=${DB_USER} \
+            -Dnexus.datastore.nexus.password=${DB_PASSWORD}"
+        volumeMounts:
+        - mountPath: /nexus-data
+          name: nexus-data
+        - name: blob-storage
+          mountPath: /blobs
+        - name: license-volume
+          mountPath: /etc/nxrm-license/nxrm-license.lic
+          subPath: nxrm-license.lic
+          readOnly: true
+      volumes:
+        - name: blob-storage
+          persistentVolumeClaim:
+            claimName: nexus3-blobstorage-claim
+        - name: nexus-data
+          persistentVolumeClaim:
+            claimName: nexus3-data-pvc
+        - name: license-volume
+          secret:
+            secretName: nxrm-license
+

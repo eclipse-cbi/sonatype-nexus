@@ -1,0 +1,30 @@
+# Default values for nexus3.
+
+appName: nexus3
+namespace: repo-eclipse-org
+host: repo3.eclipse.org
+
+image:
+  # Sonatype Official Public Image
+  repository: sonatype/nexus3
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 3.67.1
+
+nexusPort: 8081
+
+resources:
+  requests:
+    cpu: 8
+    memory: 8Gi
+  limits:
+    cpu: 8
+    memory: 8Gi
+
+securityContext:
+  runAsUser: 200
+  runAsGroup: 200
+  fsGroup: 200
+
+dbSecretName: nexus3-postgressql-db
+secretLicenseName: nxrm-license
