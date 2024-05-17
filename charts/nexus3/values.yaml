@@ -3,6 +3,7 @@
 appName: nexus3
 namespace: repo-eclipse-org
 host: repo3.eclipse.org
+dockerProxyHost: docker-registry.eclipse.org
 
 image:
   # Sonatype Official Public Image
@@ -12,6 +13,7 @@ image:
   tag: 3.67.1
 
 nexusPort: 8081
+dockerRegistryPort: 5003
 
 resources:
   requests:
