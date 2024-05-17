@@ -66,7 +66,7 @@ spec:
             memory: 8Gi
         volumeMounts:
         - mountPath: /var/nexus/work
-          name: nexus-work
+          name: nexus-work-cephfs
         - mountPath: /tmp/nexus
           name: nexus-tmp
         env:
@@ -81,18 +81,9 @@ spec:
       volumes:
       - name: nexus-tmp
         emptyDir: {}
-  volumeClaimTemplates:
-  - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: nexus-work
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1000Gi
-      volumeMode: Filesystem
+      - name: nexus-work-cephfs
+        persistentVolumeClaim:
+          claimName: nexus-work-cephfs-nexus-0
 ---
 apiVersion: v1
 kind: Service
