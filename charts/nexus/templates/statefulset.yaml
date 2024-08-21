@@ -77,17 +77,6 @@ spec:
       volumes:
       - name: nexus-tmp
         emptyDir: {}
-  volumeClaimTemplates:
-  - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: {{ .Values.pvcName }}
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      storageClassName: {{ .Values.volumeClaimTemplates.spec.storageClassName }}
-      resources:
-        requests:
-          storage: {{ .Values.volumeClaimTemplates.spec.resources.requests.storage }}
-      volumeMode: Filesystem
-
+      - name: {{ .Values.pvcName }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.pvcName }}

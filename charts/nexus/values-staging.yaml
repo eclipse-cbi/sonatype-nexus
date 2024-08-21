@@ -17,11 +17,5 @@ resources:
     cpu: 2
     memory: 2Gi
 
-pvcName: nexus-work-staging-cephfs
-
-volumeClaimTemplates:
-  spec:
-    storageClassName: cephfs-2repl
-    resources:
-      requests:
-        storage: 50Gi
+pvcName: nexus-work-staging-cephfs-nfs
+pvcNFSPath: /nexus2-staging
