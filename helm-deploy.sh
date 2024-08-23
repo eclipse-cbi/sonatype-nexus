@@ -20,10 +20,10 @@ ROOT_DIR="${SCRIPT_FOLDER}"
 release_name_staging="nexus-staging"
 release_name_production="nexus-production"
 chart_name="nexus"
+namespace="repo-eclipse-org"
 
 environment="${1:-}"
 image_tag="${2:-}" #optional
-namespace="repo-eclipse-org"
 
 # check that environment is not empty
 if [[ -z "${environment}" ]]; then
