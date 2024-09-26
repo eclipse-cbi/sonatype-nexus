@@ -86,7 +86,7 @@ spec:
             -Djava.util.prefs.userRoot=/nexus-data/javaprefs \
             -Dnexus.datastore.nexus.name=nexus \
             -Dnexus.datastore.nexus.type=jdbc \
-            -Dnexus.datastore.nexus.jdbcUrl=jdbc:postgresql://postgres-vm1:5432/${DB_NAME} \
+            -Dnexus.datastore.nexus.jdbcUrl=jdbc:postgresql://pgsql-write.eclipse.org:5432/${DB_NAME} \
             -Dnexus.datastore.nexus.username=${DB_USER} \
             -Dnexus.datastore.nexus.password=${DB_PASSWORD}"
         volumeMounts:
