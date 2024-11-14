@@ -3,4 +3,4 @@ name: nexus
 description: A Helm chart for Nexus 2 OSS
 type: application
 version: 0.1.0
-appVersion: "2.15.1-02"
+appVersion: "2.15.2-03"
