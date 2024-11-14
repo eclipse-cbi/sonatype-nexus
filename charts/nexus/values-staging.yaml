@@ -17,5 +17,7 @@ resources:
     cpu: 2
     memory: 2Gi
 
-pvcName: nexus-work-staging-cephfs-nfs
-pvcNFSPath: /nexus2-staging
+pvc:
+  name: nexus-work-staging-cephfs
+  size: 1000Gi
+  storageclass: cephfs-2repl

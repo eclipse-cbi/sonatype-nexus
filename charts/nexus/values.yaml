@@ -17,5 +17,7 @@ resources:
     cpu: 4
     memory: 8Gi
 
-pvcName: nexus-work-cephfs-nfs
-pvcNFSPath: /nexus2
+pvc:
+  name: nexus-work-cephfs-nexus-0
+  size: 1000Gi
+  storageclass: cephfs-2repl

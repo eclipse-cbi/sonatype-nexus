@@ -1,56 +1,17 @@
-#*******************************************************************************
-# Copyright (c) 2023 Eclipse Foundation and others.
-# This program and the accompanying materials are made available
-# under the terms of the Eclipse Public License 2.0
-# which is available at http://www.eclipse.org/legal/epl-v20.html,
-# or the MIT License which is available at https://opensource.org/licenses/MIT.
-# SPDX-License-Identifier: EPL-2.0 OR MIT
-#*******************************************************************************
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: {{ .Values.pvcName }}
-  namespace: {{ .Values.namespace }}
-  labels:
-    path: {{ .Values.pvcName }}
-spec:
-  capacity:
-     storage: 1000Gi
-  accessModes:
-    - ReadWriteMany
-  claimRef:
-    namespace: {{ .Values.namespace }}
-    name: {{ .Values.pvcName }}
-  nfs:
-    path: {{ .Values.pvcNFSPath }}
-    server: 172.25.51.200
-  mountOptions:
-    - vers=4.2
-    - proto=tcp
-    - rsize=32768
-    - wsize=32768
-    - timeo=600
-    - fg
-    - hard
-    - retrans=10
-    - intr
-    - relatime
-    - nodiratime
-    - async
-  persistentVolumeReclaimPolicy: Retain
----
 kind: PersistentVolumeClaim
-apiVersion: v1
 metadata:
-  name: {{ .Values.pvcName }}
+  name: {{ .Values.pvc.name }}
   namespace: {{ .Values.namespace }}
+  annotations:
+    "helm.sh/resource-policy": keep # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource
 spec:
   accessModes:
     - ReadWriteMany
-  selector:
-    matchLabels:
-      path: {{ .Values.pvcName }}
+  storageClassName: {{ .Values.pvc.storageclass }}
   resources:
     requests:
-      storage: 1000Gi
+      storage: {{ .Values.pvc.size }}
+
+  
