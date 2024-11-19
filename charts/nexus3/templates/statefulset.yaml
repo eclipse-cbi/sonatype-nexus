@@ -80,7 +80,6 @@ spec:
         - name: INSTALL4J_ADD_VM_PARAMS
           value: "-Xms2703M -Xmx2703M -XX:MaxDirectMemorySize=2703M \
             -XX:+UnlockExperimentalVMOptions \
-            -XX:+UseCGroupMemoryLimitForHeap \
             -Dnexus.datastore.enabled=true \
             -Dnexus.licenseFile=${LICENSE_FILE}
             -Djava.util.prefs.userRoot=/nexus-data/javaprefs \
