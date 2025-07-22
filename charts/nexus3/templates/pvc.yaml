@@ -1,32 +1,32 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nexus3-blobstorage-claim
+  name: nexus3-blobstorage-claim-{{ .Values.storageName }}
   namespace: {{ .Values.namespace }}
   annotations:
     "helm.sh/resource-policy": keep # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: cephfs-2repl
   resources:
     requests:
       storage: 200Gi
+  storageClassName: {{ .Values.storageClassName }}
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nexus3-data-pvc
+  name: nexus3-data-pvc-{{ .Values.storageName }}
   namespace: {{ .Values.namespace }}
   annotations:
     "helm.sh/resource-policy": keep # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: cephfs-2repl
   resources:
     requests:
       storage: 10Gi
+  storageClassName: {{ .Values.storageClassName }}
 
 

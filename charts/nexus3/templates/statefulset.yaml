@@ -100,10 +100,10 @@ spec:
       volumes:
         - name: blob-storage
           persistentVolumeClaim:
-            claimName: nexus3-blobstorage-claim
+            claimName: nexus3-blobstorage-claim-{{ .Values.storageName }}
         - name: nexus-data
           persistentVolumeClaim:
-            claimName: nexus3-data-pvc
+            claimName: nexus3-data-pvc-{{ .Values.storageName }}
         - name: license-volume
           secret:
             secretName: nxrm-license

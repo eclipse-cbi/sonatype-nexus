@@ -23,6 +23,10 @@ resources:
     cpu: 8
     memory: 8Gi
 
+# storage
+storageName: cephfs-new
+storageClassName: cephfs-new-retain
+
 securityContext:
   runAsUser: 200
   runAsGroup: 200
