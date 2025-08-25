@@ -27,6 +27,10 @@ resources:
 storageName: cephfs-new
 storageClassName: cephfs-new-retain
 
+projectStorage:
+  - name: kura
+    size: 50Gi
+
 securityContext:
   runAsUser: 200
   runAsGroup: 200

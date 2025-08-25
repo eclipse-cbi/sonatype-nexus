@@ -30,3 +30,20 @@ spec:
   storageClassName: {{ .Values.storageClassName }}
 
 
+{{- range $.Values.projectStorage }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nexus3-blobstorage-claim-{{ .name }}
+  namespace: {{ $.Values.namespace }}
+  annotations:
+    "helm.sh/resource-policy": keep # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .size }}
+  storageClassName: {{ $.Values.storageClassName }}
+{{- end }}
