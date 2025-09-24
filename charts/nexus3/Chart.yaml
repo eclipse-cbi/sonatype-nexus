@@ -3,4 +3,4 @@ name: nexus3
 description: A Helm chart for Nexus 3
 type: application
 version: 0.1.0
-appVersion: "3.83.1"
+appVersion: "3.84.0"
