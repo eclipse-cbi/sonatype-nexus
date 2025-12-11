@@ -28,8 +28,72 @@ storageName: cephfs-new
 storageClassName: cephfs-new-retain
 
 projectStorage:
-  - name: kura
-    size: 50Gi
+  - name: ee4j.agentic-ai
+  - name: ee4j.angus
+  - name: ee4j.authentication
+  - name: ee4j.authorization
+  - name: ee4j.batch
+  - name: ee4j.ca
+  - name: ee4j.cargotracker
+  - name: ee4j.cdi
+  - name: ee4j.cu
+  - name: ee4j.data
+  - name: ee4j.eclipselink
+  - name: ee4j.ejb
+  - name: ee4j.el
+  - name: ee4j.epicyro
+  - name: ee4j.exousia
+  - name: ee4j.expressly
+  - name: ee4j.faces
+  - name: ee4j.glassfish
+  - name: ee4j.gransasso
+  - name: ee4j.grizzly
+  - name: ee4j.interceptors
+  - name: ee4j.jaf
+  - name: ee4j.jakartaconfig
+  - name: ee4j.jakartaee-documentation
+  - name: ee4j.jakartaee-examples
+  - name: ee4j.jakartaee-platform
+  - name: ee4j.jakartaee-stable
+  - name: ee4j.jakartaee-tck
+  - name: ee4j.jaxb
+  - name: ee4j.jaxb-impl
+  - name: ee4j.jaxws
+  - name: ee4j.jca
+  - name: ee4j.jersey
+  - name: ee4j.jpa
+  - name: ee4j.jsonb
+  - name: ee4j.jsonp
+  - name: ee4j.jsp
+  - name: ee4j.jstl
+  - name: ee4j.jta
+  - name: ee4j.krazo
+  - name: ee4j.mail
+  - name: ee4j.messaging
+  - name: ee4j.metro
+  - name: ee4j.mojarra
+  - name: ee4j.mvc
+  - name: ee4j.nosql
+  - name: ee4j.odi
+  - name: ee4j.openmq
+  - name: ee4j.orb
+  - name: ee4j.parsson
+  - name: ee4j.piranha
+  - name: ee4j.portlet
+  - name: ee4j.portlet-bridge
+  - name: ee4j.query
+  - name: ee4j.rest
+  - name: ee4j.rpc
+  - name: ee4j.security
+  - name: ee4j.servlet
+  - name: ee4j.soteria
+  - name: ee4j.starter
+  - name: ee4j.tyrus
+  - name: ee4j.validation
+  - name: ee4j.wasp
+  - name: ee4j.websocket
+  - name: ee4j.yasson
+  - name: iot.kura
 
 securityContext:
   runAsUser: 200

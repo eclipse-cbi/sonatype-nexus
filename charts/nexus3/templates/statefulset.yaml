@@ -94,8 +94,8 @@ spec:
         - name: blob-storage
           mountPath: /blobs
 {{- range $.Values.projectStorage }}
-        - name: blob-storage-{{ .name }}
-          mountPath: /blobs-{{ .name }}
+        - name: blob-storage-{{ .name | splitList "." | last }}
+          mountPath: /blobs-{{ .name | splitList "." | last }}
 {{- end }}
         - name: license-volume
           mountPath: /etc/nxrm-license/nxrm-license.lic
@@ -112,7 +112,7 @@ spec:
           secret:
             secretName: nxrm-license
 {{- range $.Values.projectStorage }}
-        - name: blob-storage-{{ .name }}
+        - name: blob-storage-{{ .name | splitList "." | last }}
           persistentVolumeClaim:
-            claimName: nexus3-blobstorage-claim-{{ .name }}
+            claimName: nexus3-blobstorage-claim-{{ .name | splitList "." | last }}
 {{- end }}
