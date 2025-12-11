@@ -28,6 +28,7 @@ storageName: cephfs-new
 storageClassName: cephfs-new-retain
 
 projectStorage:
+  - name: automotive.tractusx
   - name: ee4j
   - name: ee4j.agentic-ai
   - name: ee4j.angus
