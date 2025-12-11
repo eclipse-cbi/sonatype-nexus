@@ -28,6 +28,7 @@ storageName: cephfs-new
 storageClassName: cephfs-new-retain
 
 projectStorage:
+  - name: ee4j
   - name: ee4j.agentic-ai
   - name: ee4j.angus
   - name: ee4j.authentication
@@ -93,7 +94,10 @@ projectStorage:
   - name: ee4j.wasp
   - name: ee4j.websocket
   - name: ee4j.yasson
+  - name: foundation-internal.webdev
   - name: iot.kura
+  - name: technology.cbi
+
 
 securityContext:
   runAsUser: 200
