@@ -20,7 +20,7 @@ ROOT_DIR="${SCRIPT_FOLDER}"
 release_name_staging="nexus3-staging"
 release_name_production="nexus3-production"
 chart_name="nexus3"
-namespace="repo-eclipse-org"
+namespace="repo3-eclipse-org"
 
 environment="${1:-}"
 image_tag="${2:-}" #optional
@@ -42,10 +42,21 @@ else
   exit 1
 fi
 
+# Check for license file
+license_file="${ROOT_DIR}/charts/${chart_name}/secrets/nxrm-license.lic"
+if [[ ! -f "${license_file}" ]]; then
+  printf "ERROR: License file not found at '%s'.\n" "${license_file}"
+  printf "Please ensure the license file exists before deploying.\n"
+  exit 1
+fi
+echo "License file found at '${license_file}'."
+
 
 if helm list -n "${namespace}" | grep "${release_name}" > /dev/null; then
   echo "Found installed Helm chart for release name '${release_name}'. Upgrading..."
   action="upgrade"
+  helm diff "upgrade" "${release_name}" "${ROOT_DIR}/charts/${chart_name}" -f "${values_file}" --namespace "${namespace}" --context 0
+  read -rsp $'Once you are ok, press any key to continue...\n' -n1
 else
   echo "Found no installed Helm chart for release name '${release_name}'. Installing..."
   action="install"

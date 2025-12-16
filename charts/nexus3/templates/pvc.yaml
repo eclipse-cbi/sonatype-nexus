@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nexus3-blobstorage-claim-{{ .Values.storageName }}
+  name: nexus3-blobstorage-claim-{{ .Values.storageClassName }}
   namespace: {{ .Values.namespace }}
   annotations:
     "helm.sh/resource-policy": keep # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource
@@ -17,7 +17,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nexus3-data-pvc-{{ .Values.storageName }}
+  name: nexus3-data-pvc-{{ .Values.storageClassName }}
   namespace: {{ .Values.namespace }}
   annotations:
     "helm.sh/resource-policy": keep # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource
@@ -35,7 +35,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nexus3-blobstorage-claim-{{ .name | splitList "." | last }}
+  name: nexus3-blobstorage-project-claim-{{ .name | splitList "." | last }}
   namespace: {{ $.Values.namespace }}
   annotations:
     "helm.sh/resource-policy": keep # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource

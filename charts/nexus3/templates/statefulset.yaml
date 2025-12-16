@@ -98,21 +98,23 @@ spec:
           mountPath: /blobs-{{ .name | splitList "." | last }}
 {{- end }}
         - name: license-volume
-          mountPath: /etc/nxrm-license/nxrm-license.lic
-          subPath: nxrm-license.lic
+          mountPath: /etc/nxrm-license
           readOnly: true
       volumes:
         - name: blob-storage
           persistentVolumeClaim:
-            claimName: nexus3-blobstorage-claim-{{ .Values.storageName }}
+            claimName: nexus3-blobstorage-claim-{{ .Values.storageClassName }}
         - name: nexus-data
           persistentVolumeClaim:
-            claimName: nexus3-data-pvc-{{ .Values.storageName }}
+            claimName: nexus3-data-pvc-{{ .Values.storageClassName }}
         - name: license-volume
           secret:
             secretName: nxrm-license
+            items:
+              - key: nxrm-license.lic
+                path: nxrm-license.lic
 {{- range $.Values.projectStorage }}
         - name: blob-storage-{{ .name | splitList "." | last }}
           persistentVolumeClaim:
-            claimName: nexus3-blobstorage-claim-{{ .name | splitList "." | last }}
+            claimName: nexus3-blobstorage-project-claim-{{ .name | splitList "." | last }}
 {{- end }}

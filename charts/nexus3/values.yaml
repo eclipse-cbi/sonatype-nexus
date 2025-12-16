@@ -1,7 +1,7 @@
 # Default values for nexus3.
 
 appName: nexus3
-namespace: repo-eclipse-org
+namespace: repo3-eclipse-org
 host: repo3.eclipse.org
 dockerProxyHost: docker-registry.eclipse.org
 
@@ -24,7 +24,6 @@ resources:
     memory: 8Gi
 
 # storage
-storageName: cephfs-new
 storageClassName: cephfs-new-retain
 
 projectStorage:
@@ -99,7 +98,7 @@ projectStorage:
   - name: iot.kura
   - name: technology.cbi
   - name: technology.edc
-
+  - name: technology.jnosql
 
 securityContext:
   runAsUser: 200
