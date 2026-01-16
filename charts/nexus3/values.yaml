@@ -96,6 +96,7 @@ projectStorage:
   - name: ee4j.yasson
   - name: foundation-internal.webdev
   - name: iot.kura
+  - name: technology.andmore
   - name: technology.cbi
   - name: technology.edc
   - name: technology.jnosql
