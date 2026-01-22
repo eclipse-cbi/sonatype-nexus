@@ -27,7 +27,19 @@ resources:
 storageClassName: cephfs-new-retain
 
 projectStorage:
+# use for proxy repos
+  - name: proxy-docker
+  - name: proxy-helm
+  - name: proxy-pypi
+  - name: proxy-maven2
+  - name: proxy-npm
+
+# use for projects
+  - name: automotive.mosaic
+  - name: automotive.sumo
   - name: automotive.tractusx
+  - name: ecd.orion
+  - name: eclipse
   - name: ee4j
   - name: ee4j.agentic-ai
   - name: ee4j.angus
@@ -94,12 +106,79 @@ projectStorage:
   - name: ee4j.wasp
   - name: ee4j.websocket
   - name: ee4j.yasson
+  - name: eclipse.jdt.ls
+  - name: foundation-internal.eclipsefdn
   - name: foundation-internal.webdev
+  - name: iot.californium
+  - name: iot.concierge
+  - name: iot.ditto
+  - name: iot.eclipsescada
+  - name: iot.hawkbit
+  - name: iot.hono
   - name: iot.kura
+  - name: iot.leshan
+  - name: iot.paho
+  - name: iot.smarthome
+  - name: iot.unide
+  - name: locationtech
+  - name: locationtech.geogig
+  - name: locationtech.geomesa
+  - name: locationtech.geotrellis
+  - name: locationtech.jts
+  - name: locationtech.proj4j
+  - name: locationtech.sfcurve
+  - name: maven-central
+  - name: modeling.acceleo
+  - name: modeling.atl
+  - name: modeling.diffmerge
+  - name: modeling.eef
+  - name: modeling.emf
+  - name: modeling.emfcompare
+  - name: modeling.emfservices
+  - name: modeling.etrice
+  - name: modeling.gemoc
+  - name: modeling.henshin
+  - name: modeling.incquery
+  - name: modeling.papyrus
+  - name: modeling.sirius
+  - name: modeling.teneo
+  - name: modeling.uml2
+  - name: modeling.viatra
+  - name: research-datamite
+  - name: rt.ebr
+  - name: rt.ecf
+  - name: science.statet
   - name: technology.cbi
+  - name: technology.csi
+  - name: technology.dash
   - name: technology.edc
+  - name: technology.efxclipse
+  - name: technology.egit
+  - name: technology.golo
+  - name: technology.jgit
   - name: technology.jnosql
+  - name: technology.jubula
+  - name: technology.lemminx
+  - name: technology.lsp4jakarta
+  - name: technology.lsp4mp
+  - name: technology.lyo
+  - name: technology.microprofile
+  - name: technology.nebula.nattable
+  - name: technology.ogee
+  - name: technology.openk-platform
+  - name: technology.rcptt
+  - name: technology.recommenders
+  - name: technology.scout
+  - name: technology.sensinact
+  - name: technology.sw360
+  - name: technology.tycho
   - name: tools.andmore
+  - name: tools.linuxtools
+  - name: tools.mylyn
+  - name: tools.orbit
+  - name: tools.ptp
+  - name: tools.tm4e
+  - name: webtools
 
 securityContext:
   runAsUser: 200
