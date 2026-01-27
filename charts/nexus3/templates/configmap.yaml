@@ -13,16 +13,6 @@ metadata:
   name: {{ .Values.appName }}-nginx-config
 data:
   default.conf: |
-    # Repository mapping: old_name -> new_name
-    # dash-licenses -> dash
-    # emf-incquery -> incquery
-    # jax-rs-api -> jaxws
-    # jdtls -> ls
-    # orbit-approved-artifacts -> orbit
-    # slsa-tools -> csi
-    # locationtech-thirdparty -> locationtech
-    # viatra2 -> viatra
-
     # Extract repository name from URI
     map $request_uri $repo_name {
         default "";
@@ -31,52 +21,65 @@ data:
         "~^/service/rest/repository/browse/(?<name>[^/]+)"          $name;
     }
 
-    # Map old repository names to new names
-    map $repo_name $new_repo {
-        default                           "";
-
-        # Global repository mappings
-        "releases"                        "maven2-releases";
-        "snapshots"                       "maven2-snapshots";
-
-        # Main repository mappings
-        "dash-licenses"                   "dash-maven2";s
-        "dash-licenses-releases"          "dash-maven2-releases";
-        "dash-licenses-snapshots"         "dash-maven2-snapshots";
-
-        "emf-incquery"                    "incquery-maven2";
-        "emf-incquery-releases"           "incquery-maven2-releases";
-        "emf-incquery-snapshots"          "incquery-maven2-snapshots";
-
-        "jax-rs-api"                      "jaxws-maven2";
-        "jax-rs-api-releases"             "jaxws-maven2-releases";
-        "jax-rs-api-snapshots"            "jaxws-maven2-snapshots";
-
-        "jdtls"                           "ls-maven2";
-        "jdtls-releases"                  "ls-maven2-releases";
-        "jdtls-snapshots"                 "ls-maven2-snapshots";
-
-        "orbit-approved-artifacts"        "orbit-maven2";
-        "orbit-approved-artifacts-releases" "orbit-maven2-releases";
-        "orbit-approved-artifacts-snapshots" "orbit-maven2-snapshots";
-
-        "slsa-tools"                      "csi-maven2";
-        "slsa-tools-releases"             "csi-maven2-releases";
-        "slsa-tools-snapshots"            "csi-maven2-snapshots";
-
-        "locationtech-thirdparty"         "locationtech-maven2";
-        "locationtech-thirdparty-releases" "locationtech-maven2-releases";
-        "locationtech-thirdparty-snapshots" "locationtech-maven2-snapshots";
-
-        "viatra2"                         "viatra-maven2";
-        "viatra2-releases"                "viatra-maven2-releases";
-        "viatra2-snapshots"               "viatra-maven2-snapshots";
+    # Extract base name (without suffix) or full name if no suffix
+    map $repo_name $repo_base_or_full {
+        default                           $repo_name;
+        "~^(?<base>.+)-(releases|snapshots)$"  $base;
     }
 
-    map "$new_repo:$request_uri" $final_redirect {
+    # Extract suffix (-releases/-snapshots) if exists
+    map $repo_name $repo_suffix {
+        default                           "";
+        "~^.+-(releases)$"                "-releases";
+        "~^.+-(snapshots)$"               "-snapshots";
+    }
+
+    # Map repository base names to new names
+    map $repo_base_or_full $new_base {
+        default                           "";
+        
+        # Specific mappings (suffixes are automatically handled)
+        "dash-licenses"                   "dash-maven2";
+        "emf-incquery"                    "incquery-maven2";
+        "jax-rs-api"                      "jaxws-maven2";
+        "jdtls"                           "ls-maven2";
+        "orbit-approved-artifacts"        "orbit-maven2";
+        "slsa-tools"                      "csi-maven2";
+        "locationtech-thirdparty"         "locationtech-maven2";
+        "viatra2"                         "viatra-maven2";
+
+        # Auto-append -maven2 suffix for standard repositories
+        "~^(acceleo|andmore|atl|californium|cbi|concierge|diffmerge|ditto|ebr|ecf|eclipse|eclipsefdn|eclipsescada|eef|efxclipse|egit|emf|emfcompare|emfservices|etrice|foobar|gemoc|geogig|geomesa|geotrellis|golo|hawkbit|henshin|hono|jgit|jts|jubula|kura|lemminx|leshan|linuxtools|lsp4jakarta|lsp4mp|lyo|microprofile|mosaic|mylyn|nattable|ogee|openk-platform|orion|paho|papyrus|proj4j|ptp|rcptt|recommenders|research-datamite|scout|sensinact|sfcurve|sirius|smarthome|statet|sumo|sw360|teneo|tm4e|tycho|uml2|unide|webtools|yasson)$" "$1-maven2";
+    }
+
+    # Compute final repo name: base + suffix (or just base if no suffix)
+    map "$new_base:$repo_suffix" $new_repo {
+        default                           "";
+        "~^(?<base>[^:]+):(?<suffix>-.+)$"  "${base}${suffix}";
+        "~^(?<base>[^:]+):$"              $base;
+    }
+
+    # Explicit repository name mappings (simple renames)
+    map $repo_name $explicit_repo {
         default "";
         
-        # Only create redirect if new_repo exists
+        # Simple renames (not affected by suffix system)
+        "releases"                        "maven2-releases";
+        "snapshots"                       "maven2-snapshots";
+        "maven_central"                   "maven-central";
+        "eclipse-staging"                 "eclipse-maven2-staging";
+    }
+
+    # Choose final repo name: explicit takes priority over suffix-based
+    map "$explicit_repo:$new_repo" $final_repo {
+        default "";
+        "~^(?<explicit>[^:]+):"          $explicit;
+        "~^:(?<suffix>.+)$"              $suffix;
+    }
+
+    # Build final redirect URL
+    map "$final_repo:$request_uri" $final_redirect {
+        default "";
         "~^(?<new>[^:]+):/repository/[^/]+/(?<path>.*)$"                    /repository/$new/$path;
         "~^(?<new>[^:]+):/content/repositories/[^/]+/(?<path>.*)$"          /content/repositories/$new/$path;
         "~^(?<new>[^:]+):/service/rest/repository/browse/[^/]+/(?<path>.*)$" /service/rest/repository/browse/$new/$path;
