@@ -13,6 +13,7 @@ image:
   # tag:
 
 nexusPort: 8081
+httpPort: 8080
 dockerRegistryPort: 5003
 
 resources:

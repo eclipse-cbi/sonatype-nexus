@@ -1,0 +1,117 @@
+#*******************************************************************************
+# Copyright (c) 2023 Eclipse Foundation and others.
+# This program and the accompanying materials are made available
+# under the terms of the Eclipse Public License 2.0
+# which is available at http://www.eclipse.org/legal/epl-v20.html,
+# or the MIT License which is available at https://opensource.org/licenses/MIT.
+# SPDX-License-Identifier: EPL-2.0 OR MIT
+#*******************************************************************************
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.appName }}-nginx-config
+data:
+  default.conf: |
+    # Repository mapping: old_name -> new_name
+    # dash-licenses -> dash
+    # emf-incquery -> incquery
+    # jax-rs-api -> jaxws
+    # jdtls -> ls
+    # orbit-approved-artifacts -> orbit
+    # slsa-tools -> csi
+    # locationtech-thirdparty -> locationtech
+    # viatra2 -> viatra
+
+    # Extract repository name from URI
+    map $request_uri $repo_name {
+        default "";
+        "~^/repository/(?<name>[^/]+)"                              $name;
+        "~^/content/repositories/(?<name>[^/]+)"                    $name;
+        "~^/service/rest/repository/browse/(?<name>[^/]+)"          $name;
+    }
+
+    # Map old repository names to new names
+    map $repo_name $new_repo {
+        default                           "";
+
+        # Global repository mappings
+        "releases"                        "maven2-releases";
+        "snapshots"                       "maven2-snapshots";
+
+        # Main repository mappings
+        "dash-licenses"                   "dash-maven2";s
+        "dash-licenses-releases"          "dash-maven2-releases";
+        "dash-licenses-snapshots"         "dash-maven2-snapshots";
+
+        "emf-incquery"                    "incquery-maven2";
+        "emf-incquery-releases"           "incquery-maven2-releases";
+        "emf-incquery-snapshots"          "incquery-maven2-snapshots";
+
+        "jax-rs-api"                      "jaxws-maven2";
+        "jax-rs-api-releases"             "jaxws-maven2-releases";
+        "jax-rs-api-snapshots"            "jaxws-maven2-snapshots";
+
+        "jdtls"                           "ls-maven2";
+        "jdtls-releases"                  "ls-maven2-releases";
+        "jdtls-snapshots"                 "ls-maven2-snapshots";
+
+        "orbit-approved-artifacts"        "orbit-maven2";
+        "orbit-approved-artifacts-releases" "orbit-maven2-releases";
+        "orbit-approved-artifacts-snapshots" "orbit-maven2-snapshots";
+
+        "slsa-tools"                      "csi-maven2";
+        "slsa-tools-releases"             "csi-maven2-releases";
+        "slsa-tools-snapshots"            "csi-maven2-snapshots";
+
+        "locationtech-thirdparty"         "locationtech-maven2";
+        "locationtech-thirdparty-releases" "locationtech-maven2-releases";
+        "locationtech-thirdparty-snapshots" "locationtech-maven2-snapshots";
+
+        "viatra2"                         "viatra-maven2";
+        "viatra2-releases"                "viatra-maven2-releases";
+        "viatra2-snapshots"               "viatra-maven2-snapshots";
+    }
+
+    map "$new_repo:$request_uri" $final_redirect {
+        default "";
+        
+        # Only create redirect if new_repo exists
+        "~^(?<new>[^:]+):/repository/[^/]+/(?<path>.*)$"                    /repository/$new/$path;
+        "~^(?<new>[^:]+):/content/repositories/[^/]+/(?<path>.*)$"          /content/repositories/$new/$path;
+        "~^(?<new>[^:]+):/service/rest/repository/browse/[^/]+/(?<path>.*)$" /service/rest/repository/browse/$new/$path;
+    }
+
+    server {
+        listen 8080;
+        server_name _;
+
+        # Send logs to stdout/stderr for Kubernetes log collection
+        access_log /dev/stdout;
+        error_log /dev/stdout notice;
+        rewrite_log on;
+
+        # Rewrite URL if mapping exists
+        if ($final_redirect != "") {
+            rewrite ^ $final_redirect break;
+        }
+
+        location / {
+            proxy_pass http://localhost:8081;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location = /metrics {
+            if ($http_user_agent !~* "Prometheus") {
+                return 403;
+            }
+            vhost_traffic_status on;
+            vhost_traffic_status_bypass_limit on;
+            vhost_traffic_status_bypass_stats on;
+            vhost_traffic_status_display;
+            vhost_traffic_status_display_format prometheus;
+        }
+    }

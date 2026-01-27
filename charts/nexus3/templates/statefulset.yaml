@@ -100,7 +100,28 @@ spec:
         - name: license-volume
           mountPath: /etc/nxrm-license
           readOnly: true
+      - name: nginx-sidecar
+        image: docker.io/eclipsecbi/nginx-vts:latest
+        imagePullPolicy: Always
+        ports:
+          - name: nginx-http
+            containerPort: 8080
+            protocol: TCP
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+        resources:
+          requests:
+            cpu: 500m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
       volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ .Values.appName }}-nginx-config
         - name: blob-storage
           persistentVolumeClaim:
             claimName: nexus3-blobstorage-claim-{{ .Values.storageClassName }}

@@ -18,7 +18,7 @@ spec:
   host: {{ .Values.host }}
   path: /
   port:
-    targetPort: http
+    targetPort: nginx-http
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge
