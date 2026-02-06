@@ -94,6 +94,9 @@ data:
         error_log /dev/stdout notice;
         rewrite_log on;
 
+        client_max_body_size 1g;
+        client_body_buffer_size 128k;
+
         # Rewrite URL if mapping exists
         if ($final_redirect != "") {
             rewrite ^ $final_redirect break;
