@@ -25,6 +25,7 @@ resources:
     memory: 8Gi
 
 # storage
+storageClassNameRbd: ceph-rbd-retain
 storageClassName: cephfs-new-retain
 
 projectStorage:
@@ -113,6 +114,7 @@ projectStorage:
   - name: iot.californium
   - name: iot.concierge
   - name: iot.ditto
+    size: 100Gi
   - name: iot.eclipsescada
   - name: iot.hawkbit
   - name: iot.hono
@@ -124,6 +126,7 @@ projectStorage:
   - name: locationtech
   - name: locationtech.geogig
   - name: locationtech.geomesa
+    size: 100Gi
   - name: locationtech.geotrellis
   - name: locationtech.jts
   - name: locationtech.proj4j
