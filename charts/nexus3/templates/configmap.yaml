@@ -92,7 +92,7 @@ data:
         # Send logs to stdout/stderr for Kubernetes log collection
         access_log /dev/stdout;
         error_log /dev/stdout notice;
-        rewrite_log on;
+        rewrite_log off;
 
         client_max_body_size 1g;
         client_body_buffer_size 128k;

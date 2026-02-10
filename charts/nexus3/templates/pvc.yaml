@@ -29,21 +29,20 @@ spec:
       storage: 10Gi
   storageClassName: {{ .Values.storageClassName }}
 
-
 {{- range $.Values.projectStorage }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nexus3-blobstorage-project-claim-{{ .name | splitList "." | last }}
+  name: nexus3-blobstorage-project-claim-rbd-{{ .name | splitList "." | last }}
   namespace: {{ $.Values.namespace }}
   annotations:
     "helm.sh/resource-policy": keep # https://helm.sh/docs/howto/charts_tips_and_tricks/#tell-helm-not-to-uninstall-a-resource
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: {{ .size | default "50Gi" }}
-  storageClassName: {{ $.Values.storageClassName }}
+  storageClassName: {{ $.Values.storageClassNameRbd }}
 {{- end }}
