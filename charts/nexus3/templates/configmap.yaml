@@ -45,7 +45,6 @@ data:
         "jdtls"                           "ls-maven2";
         "orbit-approved-artifacts"        "orbit-maven2";
         "slsa-tools"                      "csi-maven2";
-        "locationtech-thirdparty"         "locationtech-maven2";
         "viatra2"                         "viatra-maven2";
 
         # Auto-append -maven2 suffix for standard repositories
@@ -68,6 +67,7 @@ data:
         "snapshots"                       "maven2-snapshots";
         "maven_central"                   "maven-central";
         "eclipse-staging"                 "eclipse-maven2-staging";
+        "locationtech-thirdparty"         "locationtech-maven2-releases";
     }
 
     # Choose final repo name: explicit takes priority over suffix-based
