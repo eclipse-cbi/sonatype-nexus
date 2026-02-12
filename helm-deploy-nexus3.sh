@@ -61,7 +61,8 @@ else
   echo "Found no installed Helm chart for release name '${release_name}'. Installing..."
   action="install"
 fi
-
+echo
+echo "Deploying..."
 if [[ -z "${image_tag}" ]]; then
  helm "${action}" "${release_name}" "${ROOT_DIR}/charts/${chart_name}" -f "${values_file}" --namespace "${namespace}"
 else
