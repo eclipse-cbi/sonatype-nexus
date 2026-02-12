@@ -175,6 +175,7 @@ projectStorage:
   - name: technology.scout
   - name: technology.sensinact
   - name: technology.sw360
+    size: 100Gi
   - name: technology.tycho
   - name: tools.andmore
   - name: tools.linuxtools
