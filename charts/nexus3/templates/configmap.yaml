@@ -67,7 +67,8 @@ data:
         "snapshots"                       "maven2-snapshots";
         "maven_central"                   "maven-central";
         "eclipse-staging"                 "eclipse-maven2-staging";
-        "locationtech-thirdparty"         "locationtech-maven2-releases";
+        "locationtech-thirdparty"         "locationtech-maven2-thirdparty";
+        "orbit-approved-artifacts"        "orbit-maven2-approved-artifacts";
     }
 
     # Choose final repo name: explicit takes priority over suffix-based
