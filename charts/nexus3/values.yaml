@@ -38,6 +38,7 @@ projectStorage:
 
 # use for projects
   - name: automotive.mosaic
+  - name: automotive.score
   - name: automotive.sumo
   - name: automotive.tractusx
   - name: ecd.orion
