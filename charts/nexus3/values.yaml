@@ -2,7 +2,7 @@
 
 appName: nexus3
 namespace: repo3-eclipse-org
-host: repo3.eclipse.org
+host: repo.eclipse.org
 dockerProxyHost: docker-registry.eclipse.org
 
 image:
