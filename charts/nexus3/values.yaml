@@ -172,6 +172,7 @@ projectStorage:
   - name: technology.ogee
   - name: technology.openk-platform
   - name: technology.rcptt
+    size: 100Gi
   - name: technology.recommenders
   - name: technology.scout
   - name: technology.sensinact
