@@ -42,7 +42,7 @@ projectStorage:
   - name: automotive.sumo
   - name: automotive.tractusx
   - name: ecd.orion
-  - name: eclipse
+  - name: eclipse.platform.releng
   - name: ee4j
   - name: ee4j.agentic-ai
   - name: ee4j.angus
