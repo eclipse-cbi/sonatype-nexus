@@ -17,7 +17,7 @@ data:
     map $request_uri $repo_name {
         default "";
         "~^/repository/(?<name>[^/]+)"                              $name;
-        "~^/content/repositories/(?<name>[^/]+)"                    $name;
+        "~^/content/(repositories|groups)/(?<name>[^/]+)"           $name;
         "~^/service/rest/repository/browse/(?<name>[^/]+)"          $name;
     }
 
@@ -82,7 +82,7 @@ data:
     map "$final_repo:$request_uri" $final_redirect {
         default "";
         "~^(?<new>[^:]+):/repository/[^/]+/(?<path>.*)$"                    /repository/$new/$path;
-        "~^(?<new>[^:]+):/content/repositories/[^/]+/(?<path>.*)$"          /content/repositories/$new/$path;
+        "~^(?<new>[^:]+):/content/(repositories|groups)/[^/]+/(?<path>.*)$" /content/repositories/$new/$path;
         "~^(?<new>[^:]+):/service/rest/repository/browse/[^/]+/(?<path>.*)$" /service/rest/repository/browse/$new/$path;
     }
 
