@@ -37,6 +37,7 @@ projectStorage:
   - name: proxy-npm
 
 # use for projects
+  - name: automotive.ankaios
   - name: automotive.mosaic
   - name: automotive.score
   - name: automotive.sumo
@@ -186,11 +187,6 @@ projectStorage:
   - name: tools.ptp
   - name: tools.tm4e
   - name: webtools
-
-securityContext:
-  runAsUser: 200
-  runAsGroup: 200
-  fsGroup: 200
 
 dbSecretName: nexus3-postgressql-db
 secretLicenseName: nxrm-license
