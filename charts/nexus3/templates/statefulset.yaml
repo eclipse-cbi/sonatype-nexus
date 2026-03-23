@@ -100,6 +100,18 @@ spec:
         - name: license-volume
           mountPath: /etc/nxrm-license
           readOnly: true
+{{- if .Values.securityContext }}
+        securityContext:
+{{- if .Values.securityContext.seLinuxOptions }}
+          seLinuxOptions:
+{{- if .Values.securityContext.seLinuxOptions.type }}
+            type: {{ .Values.securityContext.seLinuxOptions.type | quote }}
+{{- end }}
+{{- if .Values.securityContext.seLinuxOptions.level }}
+            level: {{ .Values.securityContext.seLinuxOptions.level }}
+{{- end }}
+{{- end }}
+{{- end }}
       - name: nginx-sidecar
         image: docker.io/eclipsecbi/nginx-vts:latest
         imagePullPolicy: Always

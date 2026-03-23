@@ -24,6 +24,11 @@ resources:
     cpu: 8
     memory: 8Gi
 
+securityContext:
+  seLinuxOptions:
+    type: 'spc_t'
+    level: 's0:c66,c15'
+
 # storage
 storageClassNameRbd: ceph-rbd-retain
 storageClassName: cephfs-new-retain

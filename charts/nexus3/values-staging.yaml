@@ -1,0 +1,48 @@
+# Default values for nexus3.
+
+appName: nexus3
+namespace: repo-eclipse-org-staging
+host: repo-staging.eclipse.org
+dockerProxyHost: docker-registry.eclipse.org
+
+image:
+  # Sonatype Official Public Image
+  repository: sonatype/nexus3
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  # tag:
+
+nexusPort: 8081
+httpPort: 8080
+dockerRegistryPort: 5003
+
+resources:
+  requests:
+    cpu: 8
+    memory: 8Gi
+  limits:
+    cpu: 8
+    memory: 8Gi
+
+securityContext:
+  seLinuxOptions:
+    type: 'spc_t'
+    level: 's0:c34,c19'
+
+# storage
+storageClassNameRbd: ceph-rbd-retain
+storageClassName: cephfs-new-retain
+
+projectStorage:
+# use for proxy repos
+  - name: proxy-docker
+  - name: proxy-helm
+  - name: proxy-pypi
+  - name: proxy-maven2
+  - name: proxy-npm
+
+# use for projects
+  - name: technology.cbi
+
+dbSecretName: nexus3-postgressql-db
+secretLicenseName: nxrm-license
