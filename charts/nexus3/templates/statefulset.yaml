@@ -125,11 +125,11 @@ spec:
           subPath: default.conf
         resources:
           requests:
-            cpu: 500m
-            memory: 256Mi
+            cpu: {{ .Values.sidecar.resources.requests.cpu }}
+            memory: {{ .Values.sidecar.resources.requests.memory }}
           limits:
-            cpu: 1000m
-            memory: 512Mi
+            cpu: {{ .Values.sidecar.resources.limits.cpu }}
+            memory: {{ .Values.sidecar.resources.limits.memory }}
       volumes:
         - name: nginx-config
           configMap:

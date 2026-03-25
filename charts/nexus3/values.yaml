@@ -29,6 +29,15 @@ securityContext:
     type: 'spc_t'
     level: 's0:c66,c15'
 
+sidecar:
+  resources:
+    requests:
+      cpu: 2000m
+      memory: 4Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
 # storage
 storageClassNameRbd: ceph-rbd-retain
 storageClassName: cephfs-new-retain
