@@ -112,7 +112,7 @@ spec:
 {{- end }}
 {{- end }}
 {{- end }}
-      - name: nginx-sidecar
+      - name: nexus3-nginx
         image: docker.io/eclipsecbi/nginx-vts:latest
         imagePullPolicy: Always
         ports:
