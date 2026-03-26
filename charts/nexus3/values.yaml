@@ -193,13 +193,13 @@ projectStorage:
   - name: technology.sensinact
   - name: technology.sw360
     size: 100Gi
+  - name: technology.tm4e
   - name: technology.tycho
   - name: tools.andmore
   - name: tools.linuxtools
   - name: tools.mylyn
   - name: tools.orbit
   - name: tools.ptp
-  - name: tools.tm4e
   - name: webtools
 
 dbSecretName: nexus3-postgressql-db
