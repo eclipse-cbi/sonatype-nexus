@@ -24,6 +24,15 @@ resources:
     cpu: 8
     memory: 8Gi
 
+# JVM Configuration
+# With 8Gi container memory, allocate:
+# - 5120M for heap (5GB)
+# - 2048M for direct memory (2GB)
+# - Remaining ~1GB for overhead (metaspace, thread stacks, etc.)
+jvm:
+  heapSize: 5120M
+  maxDirectMemorySize: 2048M
+
 securityContext:
   seLinuxOptions:
     type: 'spc_t'
@@ -187,7 +196,7 @@ projectStorage:
   - name: technology.ogee
   - name: technology.openk-platform
   - name: technology.rcptt
-    size: 105Gi
+    size: 110Gi
   - name: technology.recommenders
   - name: technology.scout
   - name: technology.sensinact

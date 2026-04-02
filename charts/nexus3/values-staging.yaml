@@ -18,11 +18,20 @@ dockerRegistryPort: 5003
 
 resources:
   requests:
-    cpu: 8
-    memory: 8Gi
+    cpu: 2
+    memory: 4Gi
   limits:
-    cpu: 8
-    memory: 8Gi
+    cpu: 2
+    memory: 4Gi
+
+# JVM Configuration
+# With 4Gi container memory, allocate:
+# - 2560M for heap (2.5GB)
+# - 1024M for direct memory (1GB)
+# - Remaining ~512MB for overhead (metaspace, thread stacks, etc.)
+jvm:
+  heapSize: 2560M
+  maxDirectMemorySize: 1024M
 
 securityContext:
   seLinuxOptions:

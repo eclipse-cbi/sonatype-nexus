@@ -79,7 +79,7 @@ spec:
         - name: NEXUS_SEARCH_INDEX_REBUILD_ON_STARTUP
           value: "true"
         - name: INSTALL4J_ADD_VM_PARAMS
-          value: "-Xms2703M -Xmx2703M -XX:MaxDirectMemorySize=2703M \
+          value: "-Xms{{ .Values.jvm.heapSize }} -Xmx{{ .Values.jvm.heapSize }} -XX:MaxDirectMemorySize={{ .Values.jvm.maxDirectMemorySize }} \
             -XX:+UnlockExperimentalVMOptions \
             -Dnexus.datastore.enabled=true \
             -Dnexus.licenseFile=${LICENSE_FILE}
