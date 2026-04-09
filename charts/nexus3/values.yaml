@@ -57,6 +57,7 @@ projectStorage:
   - name: proxy-helm
   - name: proxy-pypi
   - name: proxy-maven2
+    size: 100Gi
   - name: proxy-npm
 
 # use for projects
