@@ -103,6 +103,17 @@ data:
             rewrite ^ $final_redirect break;
         }
 
+        # Block access to status API endpoints (including sub-paths)
+        location ^~ /service/rest/v1/status {
+            deny all;
+            return 403;
+        }
+
+        location ^~ /service/rest/beta/status {
+            deny all;
+            return 403;
+        }
+
         location / {
             proxy_pass http://localhost:8081;
             proxy_set_header Host $host;
