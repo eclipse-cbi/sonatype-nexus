@@ -114,6 +114,12 @@ data:
             return 403;
         }
 
+        # Block access to *-maven2-releases repos (except maven2-releases itself) 
+        # when path doesn't start with /org or /lpg (acceleo-maven2-releases)
+        location ~ ^/repository/(.+)-maven2-releases/(?!org/|lpg/).* {
+            return 410;
+        }
+
         location / {
             proxy_pass http://localhost:8081;
             proxy_set_header Host $host;

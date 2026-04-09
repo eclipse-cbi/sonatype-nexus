@@ -90,8 +90,10 @@ spec:
             -Dnexus.datastore.nexus.username=${DB_USER} \
             -Dnexus.datastore.nexus.password=${DB_PASSWORD}"
         volumeMounts:
+        # - mountPath: /nexus-data
+        #   name: nexus-data
         - mountPath: /nexus-data
-          name: nexus-data
+          name: nexus-data-rbd
         - name: blob-storage
           mountPath: /blobs
 {{- range $.Values.projectStorage }}
@@ -137,10 +139,10 @@ spec:
             name: {{ .Values.appName }}-nginx-config
         - name: blob-storage
           persistentVolumeClaim:
-            claimName: nexus3-blobstorage-claim-{{ .Values.storageClassName }}
-        - name: nexus-data
+            claimName: nexus3-blobstorage-claim-{{ .Values.storageClassNameRbd }}
+        - name: nexus-data-rbd
           persistentVolumeClaim:
-            claimName: nexus3-data-pvc-{{ .Values.storageClassName }}
+            claimName: nexus3-data-pvc-{{ .Values.storageClassNameRbd }}
         - name: license-volume
           secret:
             secretName: nxrm-license

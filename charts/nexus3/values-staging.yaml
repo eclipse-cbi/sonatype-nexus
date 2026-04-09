@@ -49,7 +49,6 @@ sidecar:
 
 # storage
 storageClassNameRbd: ceph-rbd-retain
-storageClassName: cephfs-new-retain
 
 projectStorage:
 # use for proxy repos
