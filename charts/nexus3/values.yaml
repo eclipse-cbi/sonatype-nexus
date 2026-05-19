@@ -139,7 +139,7 @@ projectStorage:
   - name: iot.californium
   - name: iot.concierge
   - name: iot.ditto
-    size: 100Gi
+    size: 150Gi
   - name: iot.eclipsescada
   - name: iot.hawkbit
   - name: iot.hono
