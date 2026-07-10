@@ -10,7 +10,7 @@ image:
   repository: sonatype/nexus3
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "3.93.2"
+  tag: "3.94.0"
 
 nexusPort: 8081
 httpPort: 8080
