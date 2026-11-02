@@ -50,6 +50,8 @@ sidecar:
 # storage
 storageClassNameRbd: ceph-rbd-retain
 
+# Optional per-item keys: size, storageClass (defaults to storageClassNameRbd),
+# claimSuffix (appended to the PVC name, used to switch to a new PVC after migration)
 projectStorage:
 # use for proxy repos
   - name: proxy-docker
@@ -67,6 +69,7 @@ projectStorage:
   - name: automotive.tractusx
   - name: ecd.orion
   - name: eclipse.platform.releng
+    size: 64Gi
   - name: ee4j
   - name: ee4j.agentic-ai
   - name: ee4j.angus
@@ -199,6 +202,9 @@ projectStorage:
     size: 110Gi
   - name: technology.recommenders
   - name: technology.scout
+    storageClass: ceph-rbd-xfs-retain
+    claimSuffix: xfs
+    size: 64Gi
   - name: technology.sensinact
   - name: technology.sw360
     size: 100Gi
