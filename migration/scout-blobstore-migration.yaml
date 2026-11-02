@@ -2,6 +2,9 @@
 #
 # 1. kubectl apply -f this file          (creates the new PVC and the rsync Job, pass 1 runs live)
 # 2. Set Nexus read-only, delete the Job, change RSYNC_ARGS to add --delete, re-apply (pass 2).
+#    Wait for the final copy to succeed:
+#    kubectl -n repo3-eclipse-org wait --for=condition=complete job/nexus3-scout-blob-migration --timeout=24h
+#    Only continue if that command succeeds; otherwise inspect the Job logs and resolve the failure.
 # 3. Set `storageClass: ceph-rbd-xfs-retain` and `claimSuffix: xfs` on technology.scout in values.yaml
 #    and run ./helm-deploy-nexus3.sh production (Helm adopts the PVC thanks to the metadata below).
 ---
