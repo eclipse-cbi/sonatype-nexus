@@ -1,5 +1,6 @@
 # Migration of the technology.scout blob store PVC to a new StorageClass (inode exhaustion fix).
 #
+# 0. kubectl apply -f migration/storageclass-ceph-rbd-xfs-retain.yaml (from the repository root)
 # 1. kubectl apply -f this file          (creates the new PVC and the rsync Job, pass 1 runs live)
 # 2. Set Nexus read-only, delete the Job, change RSYNC_ARGS to add --delete, re-apply (pass 2).
 #    Wait for the final copy to succeed:
