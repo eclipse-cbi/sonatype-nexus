@@ -152,5 +152,5 @@ spec:
 {{- range $.Values.projectStorage }}
         - name: blob-storage-rbd-{{ .name | splitList "." | last }}
           persistentVolumeClaim:
-            claimName: nexus3-blobstorage-project-claim-rbd-{{ .name | splitList "." | last }}
+            claimName: {{ include "nexus3.projectClaimName" . }}
 {{- end }}
