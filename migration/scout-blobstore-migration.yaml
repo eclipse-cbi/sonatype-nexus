@@ -1,0 +1,93 @@
+# Migration of the technology.scout blob store PVC to a new StorageClass (inode exhaustion fix).
+#
+# 0. kubectl apply -f migration/storageclass-ceph-rbd-xfs-retain.yaml (from the repository root)
+# 1. kubectl apply -f this file          (creates the new PVC and the rsync Job, pass 1 runs live)
+# 2. Set Nexus read-only, delete the Job, change RSYNC_ARGS to add --delete, re-apply (pass 2).
+#    Wait for the final copy to succeed:
+#    kubectl -n repo3-eclipse-org wait --for=condition=complete job/nexus3-scout-blob-migration --timeout=24h
+#    Only continue if that command succeeds; otherwise inspect the Job logs and resolve the failure.
+# 3. Set `storageClass: ceph-rbd-xfs-retain` and `claimSuffix: xfs` on technology.scout in values.yaml
+#    and run ./helm-deploy-nexus3.sh production (Helm adopts the PVC thanks to the metadata below).
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nexus3-blobstorage-project-claim-rbd-scout-xfs
+  namespace: repo3-eclipse-org
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: nexus3-production
+    meta.helm.sh/release-namespace: repo3-eclipse-org
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 64Gi # must match the size in values.yaml
+  storageClassName: ceph-rbd-xfs-retain # StorageClass with csi.storage.k8s.io/fstype: xfs (or ext4 + mkfsOptions "-i 4096")
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nexus3-scout-blob-migration
+  namespace: repo3-eclipse-org
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      # The old volume holds ~4M files: without these, kubelet recursively chowns it (fsGroup) and
+      # the runtime relabels it (SELinux), which keeps the pod in ContainerCreating for a very long time.
+      # Same SELinux settings as the Nexus pod (spc_t = no relabel).
+      securityContext:
+        fsGroup: 1004320000
+        fsGroupChangePolicy: OnRootMismatch
+        seLinuxOptions:
+          type: spc_t
+          level: s0:c66,c15
+      # RWO RBD volumes: the Job must land on the node where the Nexus pod has the old PVC attached
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app: nexus3
+      containers:
+        - name: rsync
+          image: docker.io/instrumentisto/rsync-ssh:alpine
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              rsync $RSYNC_ARGS /old/ /new/
+              echo "files old: $(find /old -type f | wc -l)  new: $(find /new -type f | wc -l)"
+              df -i /old /new
+          env:
+            # Runs as the Nexus UID (non-root), so owner/group are not set; -O skips dir times (root of /new is not owned by this UID)
+            # Pass 1 (live): "-rlptDHO --exclude=lost+found"
+            # Pass 2 (Nexus read-only): "-rlptDHO --exclude=lost+found --delete"
+            - name: RSYNC_ARGS
+              value: "-rlptDHO --exclude=lost+found --delete"
+          securityContext:
+            runAsUser: 1004320000 # same UID as the Nexus pod, owns the existing blobs
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: old
+              mountPath: /old
+              readOnly: true
+            - name: new
+              mountPath: /new
+      volumes:
+        - name: old
+          persistentVolumeClaim:
+            claimName: nexus3-blobstorage-project-claim-rbd-scout
+        - name: new
+          persistentVolumeClaim:
+            claimName: nexus3-blobstorage-project-claim-rbd-scout-xfs
